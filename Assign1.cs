@@ -34,7 +34,7 @@ namespace Assign1
         private static uint GEAR_SLOTS = 14;
         private static uint MAX_INVENTORY_SIZE = 20;
 
-        public static Dictionary<uint, string> guilds = new Dictionary<uint, string>();
+        public static Dictionary<uint, string> Guilds = new Dictionary<uint, string>();
 
         /*
          *  This is the definition of the Main class which contains the driver program for testing Player and Item Classes
@@ -43,8 +43,8 @@ namespace Assign1
         {         
 
             //Create some guilds and players for testing
-            guilds.Add(1, "Test Guild 1");
-            guilds.Add(2, "Test Guild 2");
+            Guilds.Add(1, "Test Guild 1");
+            Guilds.Add(2, "Test Guild 2");
             // Players gear array empty right now just for testing
             Player testPlayer0 = new Player();
             Player testPlayer1 = new Player(1234, "Brad", Race.Orc, 50, 5000, 1, null);
@@ -226,7 +226,7 @@ namespace Assign1
             public override String ToString()
             {
                 string message = "name: " + _name + "\nrace: " + _race + "\nlevel: " + _level;
-                return _guildID == 0 ? message + "\n" : message + "\nguild: " + guilds[_guildID] + "\n";               
+                return _guildID == 0 ? message + "\n" : message + "\nguild: " + Guilds[_guildID] + "\n";               
             }
         }
 
