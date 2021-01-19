@@ -74,7 +74,7 @@ namespace Assign1
             /*
             * Player Attributes
             */
-        private uint _id;
+            private uint _id;
             private string _name;
             private Race _race;
             private uint _level;
