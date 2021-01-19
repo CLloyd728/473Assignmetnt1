@@ -109,6 +109,7 @@ namespace Assign1
                 _level = level;
                 _exp = exp;
                 _guildID = guildID;
+                _gear = new uint[GEAR_SLOTS];
                 //If passed in gear arrray is not empty, copy it into Player gear array
                 if (gear != null)
                     Array.Copy(gear, gear.GetLowerBound(0), _gear, _gear.GetLowerBound(0), gear.Length);
