@@ -44,6 +44,9 @@ namespace Assign1
      
         /*
          * Input file paths
+         *
+         * You Might have to alter the path if you have the input files located in a different folder than I do.
+         * Mine are in the same folder where the Assign1.cs file is located in VS.
          */
         private static string guildsFile = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName) + "\\guilds.txt";
         private static string itemsFile = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName) + "\\equipment.txt";
