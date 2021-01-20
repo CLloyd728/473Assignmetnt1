@@ -14,9 +14,7 @@ namespace Assign1
     public static class Assign1
     {
         /*
-         * Definition of constants, enums, and global storage
-         * 
-         * still need to add storage for players and items
+         * Enum definitions
          */
         public enum ItemType
         {
@@ -27,6 +25,9 @@ namespace Assign1
 
         public enum Race { Orc, Troll, Tauren, Forsaken };
 
+        /*
+         * Global variables
+         */
         private static uint MAX_ILVL = 360;
         private static uint MAX_PRIMARY = 200;
         private static uint MAX_STAMINA = 275;
@@ -34,36 +35,51 @@ namespace Assign1
         private static uint GEAR_SLOTS = 14;
         private static uint MAX_INVENTORY_SIZE = 20;
 
-        public static Dictionary<uint, string> Guilds = new Dictionary<uint, string>();
+        /*
+         * Storage for Guilds, Items, and Players
+         */
+        private static Dictionary<uint, string> Guilds = new Dictionary<uint, string>();
+        private static Dictionary<uint, Item> Items = new Dictionary<uint, Item>();
+        private static Dictionary<uint, Player> Players = new Dictionary<uint, Player>();
+     
+        /*
+         * Input file paths
+         */
+        private static string guildsFile = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName) + "\\guilds.txt";
+        private static string itemsFile = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName) + "\\equipment.txt";
+        private static string playersFile = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName) + "\\players.txt";
 
         /*
          *  This is the definition of the Main class which contains the driver program for testing Player and Item Classes
          */
         public static void Main(string[] args)
-        {         
+        {
+            //Read in data from Guilds file
+            var lines = File.ReadLines(guildsFile);
+            foreach (var line in lines)
+            {
+                //Seperate on tabs and add to dict of Guilds
+                string[] s = line.Split('\t');
+                Guilds.Add((Convert.ToUInt32(s[0])), s[1]);
+            }
 
-            //Create some guilds and players for testing
-            Guilds.Add(1, "Test Guild 1");
-            Guilds.Add(2, "Test Guild 2");
-            // Players gear array empty right now just for testing
-            Player testPlayer0 = new Player();
-            Player testPlayer1 = new Player(1234, "Brad", Race.Orc, 50, 5000, 1, null);
-            Player testPlayer2 = new Player(5678, "Cameron", Race.Forsaken, 60, 15000, 2, null);
+            //Read in data from Items file
+            lines = File.ReadLines(itemsFile);
+            foreach (var line in lines)
+            {
+                //Seperate on tabs and add to dict of Items
+                string[] s = line.Split('\t');
+                Item item = new Item(Convert.ToUInt32(s[0]), s[1], (ItemType)Convert.ToUInt32(s[2]), Convert.ToUInt32(s[3]), Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]),
+                    Convert.ToUInt32(s[6]), s[7]);
+                Items.Add(item.Id, item);
+            }
 
-            Console.WriteLine(testPlayer0);
-            Console.WriteLine(testPlayer1);
-            Console.WriteLine(testPlayer2);
-    
-            Console.WriteLine(testPlayer1.CompareTo(testPlayer2));
+            //Write all Guilds and Items for testing
+            foreach (KeyValuePair<uint, string> pair in Guilds)
+                Console.WriteLine(pair.Key + " " + pair.Value);
 
-            //Create some items for testing
-            Item test = new Item();
-            Item test2 = new Item(0005, "Mjollnir", ItemType.Trinket, 50, 100, 50, 50, "This is some flavorfull text");
-
-            Console.WriteLine(test);
-            Console.WriteLine(test2);
-
-            Console.WriteLine(test2.CompareTo(test));
+            foreach (KeyValuePair<uint, Item> pair in Items)
+                Console.WriteLine(pair.Value);
         }
 
         /*
