@@ -76,12 +76,33 @@ namespace Assign1
                     Convert.ToUInt32(s[6]), s[7]);
                 Items.Add(item.Id, item);
             }
+         
+            //Read in data from Players file
+            lines = File.ReadLines(playersFile);
+            foreach (var line in lines)
+            { 
+                //Seperate on tabs and add to dict of Players
+                string[] s = line.Split('\t');
 
-            //Write all Guilds and Items for testing
+                // Build the Gear array for the Player
+                uint[] ar = new uint[MAX_INVENTORY_SIZE];
+                for (int i = 0, x = 6; i < (MAX_INVENTORY_SIZE - 6); i++, x++)
+                {
+                    ar[i] = Convert.ToUInt32(s[x]);
+                }
+                Player player = new Player(Convert.ToUInt32(s[0]), s[1], (Race)Convert.ToUInt32(s[2]), Convert.ToUInt32(s[3]),
+                        Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]), ar);
+                Players.Add(player.Id, player);
+            }
+
+            //Write all Guilds, Items, and Players for testing
             foreach (KeyValuePair<uint, string> pair in Guilds)
                 Console.WriteLine(pair.Key + " " + pair.Value);
 
             foreach (KeyValuePair<uint, Item> pair in Items)
+                Console.WriteLine(pair.Value);
+         
+            foreach (KeyValuePair<uint, Player> pair in Players)
                 Console.WriteLine(pair.Value);
         }
 
