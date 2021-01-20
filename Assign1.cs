@@ -152,7 +152,7 @@ namespace Assign1
                 _gear = new uint[GEAR_SLOTS];
                 //If passed in gear arrray is not empty, copy it into Player gear array
                 if (gear != null)
-                    Array.Copy(gear, gear.GetLowerBound(0), _gear, _gear.GetLowerBound(0), gear.Length);
+                    Array.Copy(gear, gear.GetLowerBound(0), _gear, _gear.GetLowerBound(0), GEAR_SLOTS);
                 _inventory = new List<uint>();
             }
 
@@ -215,6 +215,7 @@ namespace Assign1
 
             /*
              * Guild ID Property
+             */
             public uint Guildid
             {
                 get => _guildID;
@@ -228,7 +229,7 @@ namespace Assign1
                 //Calculate required xp for level up
                 uint expRequired = _level * 1000;
 
-                while (exp >= expRequired && _lvl < MAX_LEVEL)
+                while (exp >= expRequired && _level < MAX_LEVEL)
                 {
                     if (_level < MAX_LEVEL)
                        _level++;
