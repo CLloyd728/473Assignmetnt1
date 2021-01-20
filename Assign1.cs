@@ -187,7 +187,7 @@ namespace Assign1
                     _exp += value;
                     
                     //Check to see if new exp amount is over threshhold to level up
-                    if (_level <= MAX_LEVEL)
+                    if (_level < MAX_LEVEL)
                         LevelUp(_exp);
                 }
             }
@@ -207,9 +207,10 @@ namespace Assign1
                 //Calculate required xp for level up
                 uint expRequired = _level * 1000;
 
-                while (exp >= expRequired)
+                while (exp >= expRequired && _lvl < MAX_LEVEL)
                 {
-                    _level++;
+                    if (_level < MAX_LEVEL)
+                       _level++;
                     expRequired = _level * 1000;
                 }
             }
