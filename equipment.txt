@@ -1,0 +1,21 @@
+﻿0001	Newbie's Helmet	0	1	10	10	1	Every adventure has humble beginnings!
+0002	Newbie's Cloak	3	1	10	10	1	The regality of a cloak can be measured by the brightness of the fabric. This one happens to be brown...
+0003	Newbie's Raiment	4	1	10	10	1	This makes you decent for being in public, but not much else.
+0004	Newbie's Gloves	6	1	10	10	1	These do little more than protect your soft, velvety hands from the wooden club you're swinging.
+0005	Newbie's Trousers	8	1	10	10	1	Wearing this simple garment separates the good, decent people from the crazed sexual deviants.
+0006	Newbie's Sandals	9	1	10	10	1	Socks are strictly prohibited from being paired with these.
+1739	Slacker	11	123	70	70	35	What should I name this... - Daniel Rogness
+1337	Nebula's Skullcrusher	0	360	120	120	60	I am every inch the warrior you are. The screams of my victims fill every field.
+1338	Helix Nebula	1	360	120	120	60	It has every appearance of a celestial Cat's Eye. - Karl Ludwig Harding
+1339	Nebula's Pauldrons	2	360	120	120	60	You would keep me from advancing! You would have Ronan tell father only Gamora furthers his great plan!
+1340	Dread Pirate Nebula's Cloak	3	360	120	120	60	I'v n'vah seen brutality dah likes as I 'ave 'rom Cap'tin Nebula. - Skunge
+1341	Nebula's Resentment	4	360	120	120	60	You are a disappointment sister; out of all our siblings, I hated you least.
+1342	Nebula's Wristguards	5	360	120	120	60	I know you're both crazy!
+1343	Nebula's Fury	6	360	120	120	60	Thanos pulled my eye from my head, and my brain from my skull, and my arm from my body... because of you.
+1344	The Spire	7	360	120	120	60	The universe's celestial royalty! The Star Queen Nebula. - Jean-Philippe de Cheseaux
+1345	Nebula's Legguards	8	360	120	120	60	I assure you I am not as easy a mark as an old man without his magic stick or a talking woodland beast.
+1346	Nebula's Stompers	9	360	120	120	60	You were the one who wanted to win. And I just wanted a sister!
+1347	Gamora's Acceptance	10	360	120	120	60	You will always be my sister.
+1348	Gamora's Love	10	360	120	120	60	He took her to Vormir. He came back with the Soul Stone... but she didn't.
+1349	Infinity Gauntlet	11	360	120	120	60	With all six Stones, I could simply snap my fingers. They would all cease to exist. I call that... mercy. - The Mad Titan
+1350	Endgame	11	360	120	120	60	... But that up there... that's the endgame. - Tony Stark
