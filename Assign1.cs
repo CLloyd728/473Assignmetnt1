@@ -204,9 +204,9 @@ namespace Assign1
             } while (casekey != "10" && casekey != "q" && casekey != "Q" && casekey != "quit" && casekey != "Quit" && casekey != "exit" && casekey != "Exit");
         }
 
-		//finds the player specified by the user
-		public static uint FindPlayer(Dictionary<uint, Player> Players)
-		{
+	//finds the player specified by the user
+	public static uint FindPlayer(Dictionary<uint, Player> Players)
+	{
             //asks the user for the name of the player
             Console.WriteLine("\nPlease enter the name of the Player.");
             String playername = Console.ReadLine();
