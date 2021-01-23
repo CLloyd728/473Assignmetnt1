@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 /*
@@ -41,7 +41,7 @@ namespace Assign1
         private static Dictionary<uint, string> Guilds = new Dictionary<uint, string>();
         private static Dictionary<uint, Item> Items = new Dictionary<uint, Item>();
         private static Dictionary<uint, Player> Players = new Dictionary<uint, Player>();
-     
+
         /*
          * Input file paths
          *
@@ -51,11 +51,164 @@ namespace Assign1
         private static string guildsFile = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName) + "\\guilds.txt";
         private static string itemsFile = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName) + "\\equipment.txt";
         private static string playersFile = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName) + "\\players.txt";
-        //function for finding the key of a player based on the name
-        public static uint findPlayer(Dictionary<uint, Player> Players)
+
+
+        /*
+         *  This is the definition of the Main class which contains the driver program for testing Player and Item Classes
+         */
+        public static void Main(string[] args)
         {
+            //Load data from input files
+            LoadData();
+
+            //prints initial greeting
+            Console.WriteLine("Welcome to the World of ConflictCraft: Testing Enviorment!\n");
+
+            //the case key or the variable that the user input that the switch will run on is stored.
+            String casekey = "0";
+            do
+            {
+                //prints the menu everytime the user does something in the menu.
+                Console.WriteLine("\nWelcome to the World of ConflictCraft: Testing Enviorment. Please select an option from the list below.");
+                Console.WriteLine("1.) Print all players");
+                Console.WriteLine("2.) Print all guilds");
+                Console.WriteLine("3.) Print all gear");
+                Console.WriteLine("4.) Print gear list for player");
+                Console.WriteLine("5.) Leave guild");
+                Console.WriteLine("6.) Join guild");
+                Console.WriteLine("7.) Equip gear");
+                Console.WriteLine("8.) Unequip gear");
+                Console.WriteLine("9.) Award experience");
+                Console.WriteLine("10.) Quit");
+                casekey = Console.ReadLine();
+                //the switch for all the menu options will be.
+                switch (casekey)
+                {
+                    //prints the player list
+                    case "1":
+                        foreach (KeyValuePair<uint, Player> pair in Players)
+                            Console.WriteLine(pair.Value);
+                        break;
+
+                    //prints the guild list
+                    case "2":
+                        foreach (KeyValuePair<uint, string> pair in Guilds)
+                            Console.WriteLine(pair.Key + " " + pair.Value);
+                        break;
+
+                    //prints the item list
+                    case "3":
+                        foreach (KeyValuePair<uint, Item> pair in Items)
+                            Console.WriteLine(pair.Value);
+                        break;
+
+                    //prints a specified players gearlist
+                    case "4":
+                        //finds the key of the player whose name the user will provide
+                        uint key4p = FindPlayer(Players);
+                        //if player is not found it exits this run of the loop
+                        if (key4p == 2147483647)
+                            break;
+                        //if the player is found it prints all the gear that the player has equiped
+                        for (int i = 0; i < GEAR_SLOTS; i++)
+                            if (Players[key4p][i] != 0)
+                                Console.WriteLine(Items[(Players[key4p])[i]]);
+                        break;
+
+                    //makes sepcified player leave their guild
+                    case "5":
+                        uint key5p = FindPlayer(Players);
+                        if (key5p == 2147483647)
+                            break;
+                        if (Players[key5p].GuildID == 0)
+                        {
+                            Console.WriteLine(Players[key5p].Name + " is not in a guild and thus cannot leave one.");
+                            break;
+                        }
+                        Players[key5p].GuildID = 0;
+                        Console.WriteLine(Players[key5p].Name + " has left their guild.");
+                        break;
+
+                    //makes specified player join specified guild.
+                    case "6":
+                        //finds the key of the player in the player list
+                        uint key6p = FindPlayer(Players);
+                        //if the player is not found it exits
+                        if (key6p == 2147483647)
+                            break;
+                        //if the guild you want to join doesn't exist it exits
+                        uint key6g = FindGuild(Guilds);
+                        if (key6g == 2147483647)
+                            break;
+                        //otherwise it the player joins the guild and it prints a message letting you know that.
+                        Players[key6p].GuildID = key6g;
+                        Console.WriteLine(Players[key6p].Name + "just joined the guild " + Guilds[key6g]);
+                        break;
+
+                    //Equips gear
+                    case "7":
+                        
+                        //finds the key of the player name entered 
+                        uint key7p = FindPlayer(Players);
+                        //if player name invalid, break
+                        if (key7p == 2147483647)
+                            break;
+
+                        //finds the key of the item name entered
+                        uint key7i = FindItem(Items);
+                        //if item name invalid, break
+                        if (key7i == 2147483647)
+                            break;
+
+                        //equip the gear if player and item exist
+                        Players[key7p].EquipGear(key7i);
+                        break;
+
+                    //Unequip gear
+                    case "8":
+                        //finds the key of the player name entered 
+                        uint key8p = FindPlayer(Players);
+                        //if player name invalid, break
+                        if (key8p == 2147483647)
+                            break;
+                        //get the slot type to unequip
+                        Console.WriteLine("\nEnter what item slot you would like to remove.");
+                        String input = Console.ReadLine();
+
+                        //check for invalid slot type
+                        if (!Enum.IsDefined(typeof(ItemType), input))
+						{
+                            Console.WriteLine("\nInvalid item type.");
+                            break;
+						}
+
+                        int slot = (int) Enum.Parse(typeof(ItemType), input);
+                        Players[key8p].UnequipGear(slot);
+                        break;
+
+                    //Award experience
+                    case "9":
+                        
+
+                    case "11":
+                        break;
+
+                    default:
+                        if (casekey == "10" || casekey == "q" || casekey == "Q" || casekey == "quit" || casekey == "Quit" || casekey == "exit" || casekey == "Exit")
+                            break;
+                        //else
+                        Console.WriteLine("You entered an invalid option please try again.");
+                        break;
+                }
+
+            } while (casekey != "10" && casekey != "q" && casekey != "Q" && casekey != "quit" && casekey != "Quit" && casekey != "exit" && casekey != "Exit");
+        }
+
+		//finds the player specified by the user
+		public static uint FindPlayer(Dictionary<uint, Player> Players)
+		{
             //asks the user for the name of the player
-            Console.WriteLine("Please enter the name of the Player.");
+            Console.WriteLine("\nPlease enter the name of the Player.");
             String playername = Console.ReadLine();
             uint key = 2147483647;
             //checks through the player list for someone by that name
@@ -75,11 +228,12 @@ namespace Assign1
             //returns the key of the related player if they exist.
             return key;
         }
+
         //finds the guild specified by the user
-        public static uint findGuild(Dictionary<uint, String> Guilds)
+        public static uint FindGuild(Dictionary<uint, String> Guilds)
         {
             //asks the user for the guild name
-            Console.WriteLine("Please enter the name of the Guild you would like to join/leave.");
+            Console.WriteLine("\nPlease enter the name of the Guild you would like to join/leave.");
             String guildname = Console.ReadLine();
             uint key = 2147483647;
             //searches the guild list for a guild by name
@@ -97,11 +251,35 @@ namespace Assign1
             //returns the guild key
             return key;
         }
-        /*
-         *  This is the definition of the Main class which contains the driver program for testing Player and Item Classes
-         */
-        public static void Main(string[] args)
+
+        //find the item specified by the user
+        public static uint FindItem(Dictionary<uint, Item> Items)
         {
+            //asks the user for the guild name
+            Console.WriteLine("\nPlease enter the name of the Item you would like to equipt.");
+            String itemName = Console.ReadLine();
+            uint key = 2147483647;
+            //searches the guild list for a guild by name
+            foreach (KeyValuePair<uint, Item> pair in Items)
+            {
+                if (pair.Value.Name == itemName)
+                    key = pair.Key;
+            }
+            //returns and says that the item couldn't be found.
+            if (key == 2147483647)
+            {
+                Console.WriteLine("Item under that name not found.");
+                return key;
+            }
+            //returns the item key
+            return key;
+        }
+
+        /*
+         * Method to load data from input files
+         */
+        public static void LoadData()
+		{
             //Read in data from Guilds file
             var lines = File.ReadLines(guildsFile);
             foreach (var line in lines)
@@ -121,11 +299,11 @@ namespace Assign1
                     Convert.ToUInt32(s[6]), s[7]);
                 Items.Add(item.Id, item);
             }
-         
+
             //Read in data from Players file
             lines = File.ReadLines(playersFile);
             foreach (var line in lines)
-            { 
+            {
                 //Seperate on tabs and add to dict of Players
                 string[] s = line.Split('\t');
 
@@ -139,100 +317,6 @@ namespace Assign1
                         Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]), ar);
                 Players.Add(player.Id, player);
             }
-            //prints initial greeting
-            Console.WriteLine("Welcome to the World of ConflictCraft: Testing Enviorment!");
-            //the case key or the variable that the user input that the switch will run on is stored.
-            String casekey = "0";
-            do
-            {
-                //prints the menu everytime the user does something in the menu.
-                Console.WriteLine("Welcome to the World of ConflictCraft: Testing Enviorment. Please select an option from the list below"); 
-                Console.WriteLine("1.) Print all players"); 
-                Console.WriteLine("2.) Print all guilds"); 
-                Console.WriteLine("3.) Print all gear"); 
-                Console.WriteLine("4.) Print gear list for player"); 
-                Console.WriteLine("5.) Leave guild"); 
-                Console.WriteLine("6.) Join guild"); 
-                Console.WriteLine("7.) Equip gear"); 
-                Console.WriteLine("8.) Unequip gear"); 
-                Console.WriteLine("9.) Award experience"); 
-                Console.WriteLine("10.) Quit");
-                casekey = Console.ReadLine();
-                //the switch for all the menu options will be.
-                switch (casekey)
-                {
-                    //prints the player list
-                    case "1":
-                        foreach (KeyValuePair<uint, Player> pair in Players)
-                            Console.WriteLine(pair.Value);
-                        break;
-                    //prints the guild list
-                    case "2":
-                        foreach (KeyValuePair<uint, string> pair in Guilds)
-                            Console.WriteLine(pair.Key + " " + pair.Value);
-                        break;
-                    //prints the item list
-                    case "3":
-                        foreach (KeyValuePair<uint, Item> pair in Items)
-                            Console.WriteLine(pair.Value);
-                        break;
-                    //prints a specified players gearlist
-                    case "4":
-                        //finds the key of the player whose name the user will provide
-                        uint key4p = findPlayer(Players);
-                        //if player is not found it exits this run of the loop
-                        if (key4p == 2147483647)
-                            break;
-                        //if the player is found it prints all the gear that the player has equiped
-                        for (int i = 0; i < GEAR_SLOTS; i++)
-                            if(Players[key4p][i] != 0)
-                                Console.WriteLine(Items[(Players[key4p])[i]]);
-                        break;
-                     //makes sepcified player leave their guild
-                    case "5":
-                        uint key5p = findPlayer(Players);
-                        if (key5p == 2147483647)
-                            break;
-                        if (Players[key5p].GuildID == 0)
-                        {
-                            Console.WriteLine(Players[key5p].Name + " is not in a guild and thus cannot leave one.");
-                            break;
-                        }
-                        Players[key5p].GuildID = 0;
-                        Console.WriteLine(Players[key5p].Name + " has left their guild.");
-                        break;
-                    //makes specified player join specified guild.
-                    case "6":
-                        //finds the key of the player in the player list
-                        uint key6p = findPlayer(Players);
-                        //if the player is not found it exits
-                        if (key6p == 2147483647)
-                            break;
-                        //if the guild you want to join doesn't exist it exits
-                        uint key6g = findGuild(Guilds);
-                        if (key6g == 2147483647)
-                            break;
-                        //otherwise it the player joins the guild and it prints a message letting you know that.
-                        Players[key6p].GuildID = key6g;
-                        Console.WriteLine(Players[key6p].Name + "just joined the guild " + Guilds[key6g]);
-                        break;
-                    case "7":
-                        break;
-                    case "8":
-                        break;
-                    case "9":
-                        break;
-                    case "11":
-                        break;
-                    default:
-                        if (casekey == "10" || casekey == "q" || casekey == "Q" || casekey == "quit" || casekey == "Quit" || casekey == "exit" || casekey == "Exit")
-                            break;
-                        //else
-                        Console.WriteLine("You entered an invalid option please try again.");
-                        break;
-                }
-
-            } while (casekey != "10" && casekey != "q" && casekey != "Q" && casekey != "quit" && casekey != "Quit" && casekey != "exit" && casekey != "Exit");
         }
 
         /*
@@ -251,6 +335,8 @@ namespace Assign1
             private uint _guildID;
             private uint[] _gear;
             private List<uint> _inventory;
+            bool firstRingNext = true;
+            bool firstTrinkNext = true;
 
             /*
              * Default Constructor for Player Class
@@ -335,7 +421,7 @@ namespace Assign1
                 {
                     //Add assigned exp value to Players exp value
                     _exp += value;
-                    
+
                     //Check to see if new exp amount is over threshhold to level up
                     if (_level < MAX_LEVEL)
                         LevelUp(_exp);
@@ -359,10 +445,101 @@ namespace Assign1
                 while (exp >= expRequired && _level < MAX_LEVEL)
                 {
                     if (_level < MAX_LEVEL)
-                       _level++;
+                        _level++;
                     expRequired = _level * 1000;
                 }
             }
+
+            /*
+             * Method to equip gear to players 
+             */ 
+            public void EquipGear(uint newGearID)
+			{                
+                //if item and player exist, equipt item id to corresponding slot in player gear array
+                int itype = (int)Items[newGearID].Type;
+
+                //make sure player meets required level for item
+                if (this.Level < Items[newGearID].Requirement)
+                {
+                    //console message instead of exception so that level requirements don't break program and allow user to try again
+                    Console.WriteLine("\n" + this.Name + " does not meet required level for " + Items[newGearID].Name + ".\n");
+                    return;
+                }
+
+                //check if item is ring or trinket, if so then special case
+                if ((itype == 10) || (itype == 11))
+				{
+                    switch (itype)
+                    {
+                        case 10:
+                            if (firstRingNext && this._gear[itype] == 0)
+                            {
+                                this._gear[itype] = newGearID;
+                                firstRingNext = false;
+                            }
+                            else
+                            {
+                                this._gear[itype + 1] = newGearID;
+                                firstRingNext = true;
+                            }
+                            break;
+
+                        case 11:
+                            if (firstTrinkNext && this._gear[itype] == 0)
+                            {
+                                this._gear[itype] = newGearID;
+                                firstTrinkNext = false;
+                            }
+                            else
+                            {
+                                this._gear[itype + 1] = newGearID;
+                                firstTrinkNext = true;
+                            }
+                            break;
+                    }
+                }
+
+                //equip to only slot otherwise
+                this._gear[itype] = newGearID;
+                Console.WriteLine("\n" + this.Name + " is now equipped with " + Items[newGearID].Name);
+            }
+
+            public void UnequipGear(int gearSlot)
+			{
+                //Special case
+                if (gearSlot == 10 || gearSlot == 11)
+                {
+                    if (this[gearSlot] == 0 && this[gearSlot + 1] == 0)
+                        Console.WriteLine("\nThere was no item in that slot. Nothing changed.");
+                    else
+                    {
+                        if (this[gearSlot] == 0)
+                        {
+                            Console.WriteLine("\n" + Items[this._gear[gearSlot + 1]].Name + " was removed from player and added to inventory");
+                            this[gearSlot + 1] = 0;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
+                            this[gearSlot] = 0;
+                        }
+                    }
+                }
+                //Non special case
+                else
+                {                    
+                    if (this[gearSlot] == 0)
+                        Console.WriteLine("\nThere was no item in that slot. Nothing changed.");
+                    else
+                    {
+                        Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
+                        this[gearSlot] = 0;
+                    }
+                }
+            }
+
+
             /*
              * Indexer for the Players Gear array
              */
@@ -394,7 +571,7 @@ namespace Assign1
             public override String ToString()
             {
                 string message = "name: " + _name + "\nrace: " + _race + "\nlevel: " + _level;
-                return _guildID == 0 ? message + "\n" : message + "\nguild: " + Guilds[_guildID] + "\n";               
+                return _guildID == 0 ? message + "\n" : message + "\nguild: " + Guilds[_guildID] + "\n";
             }
         }
 
@@ -564,4 +741,3 @@ namespace Assign1
         }
     }
 }
-
