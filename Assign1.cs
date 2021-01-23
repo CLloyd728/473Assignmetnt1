@@ -487,12 +487,12 @@ namespace Assign1
                         case 11:
                             if (firstTrinkNext && this._gear[itype] == 0)
                             {
-                                this._gear[itype] = newGearID;
+                                this._gear[itype+1] = newGearID;
                                 firstTrinkNext = false;
                             }
                             else
                             {
-                                this._gear[itype + 1] = newGearID;
+                                this._gear[itype + 2] = newGearID;
                                 firstTrinkNext = true;
                             }
                             break;
