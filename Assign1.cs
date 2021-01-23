@@ -279,7 +279,7 @@ namespace Assign1
          * Method to load data from input files
          */
         public static void LoadData()
-		{
+	{
             //Read in data from Guilds file
             var lines = File.ReadLines(guildsFile);
             foreach (var line in lines)
@@ -538,7 +538,6 @@ namespace Assign1
                     }
                 }
             }
-
 
             /*
              * Indexer for the Players Gear array
