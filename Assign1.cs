@@ -177,10 +177,10 @@ namespace Assign1
 
                         //check for invalid slot type
                         if (!Enum.IsDefined(typeof(ItemType), input))
-						{
+			{
                             Console.WriteLine("\nInvalid item type.");
                             break;
-						}
+			}
 
                         int slot = (int) Enum.Parse(typeof(ItemType), input);
                         Players[key8p].UnequipGear(slot);
