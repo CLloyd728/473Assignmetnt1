@@ -808,13 +808,11 @@ namespace Assign1
                 get => flavor;
                 set => flavor = value;
             }
-		
             //the override for ToString that just prints out all of the item stats.
             public override String ToString()
             {
                 return "(" + Type + ") " + Name + " |" + Ilvl + "| " + "--" + Requirement + "--" + "\n\t" + "\"" + Flavor + "\"";
             }
-		
             //The default constructor that just sets everything to 0 or null and adds one to Count
             //side note both of the constructors use the properties to access everything minus id
             public Item()
@@ -860,5 +858,3 @@ namespace Assign1
         }
     }
 }
-
-
