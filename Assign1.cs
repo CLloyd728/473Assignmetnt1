@@ -62,24 +62,24 @@ namespace Assign1
             LoadData();
 
             //prints initial greeting
-            Console.WriteLine("Welcome to the World of ConflictCraft: Testing Enviorment!\n");
+            Console.WriteLine("Welcome to the World of ConflictCraft: Testing Environment!");
 
             //the case key or the variable that the user input that the switch will run on is stored.
             String casekey = "0";
             do
             {
                 //prints the menu everytime the user does something in the menu.
-                Console.WriteLine("\nWelcome to the World of ConflictCraft: Testing Enviorment. Please select an option from the list below.");
-                Console.WriteLine("1.) Print all players");
-                Console.WriteLine("2.) Print all guilds");
-                Console.WriteLine("3.) Print all gear");
-                Console.WriteLine("4.) Print gear list for player");
-                Console.WriteLine("5.) Leave guild");
-                Console.WriteLine("6.) Join guild");
-                Console.WriteLine("7.) Equip gear");
-                Console.WriteLine("8.) Unequip gear");
-                Console.WriteLine("9.) Award experience");
-                Console.WriteLine("10.) Quit");
+                Console.WriteLine("\nWelcome to the World of ConflictCraft: Testing Environment. Please select an option from the list below:");
+                Console.WriteLine("\t1.) Print all players");
+                Console.WriteLine("\t2.) Print all guilds");
+                Console.WriteLine("\t3.) Print all gear");
+                Console.WriteLine("\t4.) Print gear list for player");
+                Console.WriteLine("\t5.) Leave guild");
+                Console.WriteLine("\t6.) Join guild");
+                Console.WriteLine("\t7.) Equip gear");
+                Console.WriteLine("\t8.) Unequip gear");
+                Console.WriteLine("\t9.) Award experience");
+                Console.WriteLine("\t10.) Quit");
                 casekey = Console.ReadLine();
                 //the switch for all the menu options will be.
                 switch (casekey)
@@ -93,7 +93,7 @@ namespace Assign1
                     //prints the guild list
                     case "2":
                         foreach (KeyValuePair<uint, string> pair in Guilds)
-                            Console.WriteLine(pair.Key + " " + pair.Value);
+                            Console.WriteLine(pair.Value);
                         break;
 
                     //prints the item list
@@ -110,6 +110,7 @@ namespace Assign1
                         if (key4p == 2147483647)
                             break;
                         //if the player is found it prints all the gear that the player has equiped
+                        Console.WriteLine(Players[key4p]);
                         for (uint i = 0; i < GEAR_SLOTS; i++)
                             if (Players[key4p][i] != 0)
                                 Console.WriteLine(Items[(Players[key4p])[i]]);
@@ -127,12 +128,12 @@ namespace Assign1
                         if (Players[key5p].GuildID == 0)
                         {
                             //if the player isn't in a guild it tells you that it can't leave a guild
-                            Console.WriteLine(Players[key5p].Name + "\n is not in a guild and thus cannot leave one.");
+                            Console.WriteLine(Players[key5p].Name + " is not in a guild and thus cannot leave one.");
                             break;
                         }
                         //prints a message if leaving the guild was successfull
                         Players[key5p].GuildID = 0;
-                        Console.WriteLine("\n" + Players[key5p].Name + " has left their guild.");
+                        Console.WriteLine(Players[key5p].Name + " has left their guild.");
                         break;
 
                     //makes specified player join specified guild.
@@ -148,7 +149,7 @@ namespace Assign1
                             break;
                         //otherwise it the player joins the guild and it prints a message letting you know that.
                         Players[key6p].GuildID = key6g;
-                        Console.WriteLine("\n" + Players[key6p].Name + " just joined the guild " + Guilds[key6g]);
+                        Console.WriteLine("\n" + Players[key6p].Name + " just joined " + Guilds[key6g] + "!");
                         break;
 
                     //Equips gear
@@ -178,7 +179,8 @@ namespace Assign1
                         if (key8p == 2147483647)
                             break;
                         //get the slot type to unequip
-                        Console.WriteLine("\nEnter what item slot you would like to remove.");
+                        Console.WriteLine("Enter what item slot you would like to remove:\n\tHelmet\n\tNeck\n\tShoulders\n\tBack\n\tChest" +
+                                            "\n\tWrist\n\tGloves\n\tBelt\n\tPants\n\tBoots\n\tRing\n\tTrinket");
                         String slotType = Console.ReadLine();
 
                         //check for invalid slot type
@@ -204,27 +206,32 @@ namespace Assign1
                         if (key9p == 2147483647)
                             break;
 
-                        //Get amount from user
-                        Console.WriteLine("\nEnter the amount of experience to award.");
+                        //Get amount from user and check for valid number
+                        Console.Write("Please enter the amount of experience to award: ");
                         String expAmt = Console.ReadLine();
                         for (int i = 0; i < expAmt.Length; i++)
-			{
+                        {
                             if (!Char.IsDigit(expAmt[i]))
                             {
                                 isValidExp = false;
                                 break;
                             }
-			}
+                        }
 
-                        //If input bad, break
+                        //Terminate if bad input
                         if (!isValidExp)
                         {
                             Console.WriteLine("\nInvalid input.");
                             break;
                         }
 
+                        //Terminate if player is max level
+                        if (Players[key9p].Level == MAX_LEVEL)
+                            break;
+
                         //Award entered amount of experience
                         Players[key9p].LevelUp(UInt32.Parse(expAmt));
+                        Console.WriteLine();
                         break;
 
                     case "T":
@@ -259,8 +266,9 @@ namespace Assign1
         public static uint FindPlayer(Dictionary<uint, Player> Players)
         {
             //asks the user for the name of the player
-            Console.WriteLine("\nPlease enter the name of the Player.");
+            Console.Write("\nPlease enter player name: ");
             String playername = Console.ReadLine();
+            Console.WriteLine();
             uint key = 2147483647;
             //checks through the player list for someone by that name
             foreach (KeyValuePair<uint, Player> pair in Players)
@@ -284,7 +292,7 @@ namespace Assign1
         public static uint FindGuild(Dictionary<uint, String> Guilds)
         {
             //asks the user for the guild name
-            Console.WriteLine("\nPlease enter the name of the Guild you would like to join/leave.");
+            Console.Write("Please enter the name of the Guild you would like to join/leave: ");
             String guildname = Console.ReadLine();
             uint key = 2147483647;
             //searches the guild list for a guild by name
@@ -497,12 +505,14 @@ namespace Assign1
                 {
                     if (_level < MAX_LEVEL)
                     {
+                        //Increment level and subtract required amount from awarded amount
                         _level++;
-                        Console.WriteLine("\n" + this.Name + " has reached level " + _level + "!");
+                        Console.Write("\n" + this.Name + " has reached level " + _level + "!");
+                        exp -= expRequired;
                     }
-
+                    //Calculate new required amount for next iteration
                     expRequired = _level * 1000;
-                }
+                }                
             }
 
             /*
@@ -571,7 +581,7 @@ namespace Assign1
                         this._inventory.Add(this._gear[itype]);
                     this._gear[itype] = newGearID;
                 }
-                Console.WriteLine("\n" + this.Name + " is now equipped with " + Items[newGearID].Name);
+                Console.WriteLine("\n" + this.Name + " is now equipped with " + Items[newGearID].Name + "!");
             }
 
             /*
@@ -611,7 +621,7 @@ namespace Assign1
                 else if (gearSlot == 11)
                 {
                     //Check if trinket 1 is empty
-                    if (this[gearSlot+1] == 0)
+                    if (this[gearSlot + 1] == 0)
                     {
                         //Check if trinket 2 is empty, if both empty do nothing
                         if (this[gearSlot + 2] == 0)
@@ -629,9 +639,9 @@ namespace Assign1
                     //If trinket 1 not empty, unequip trinket 1
                     else
                     {
-                        this._inventory.Add(this[gearSlot+1]);
-                        Console.WriteLine("\n" + Items[this._gear[gearSlot+1]].Name + " was removed from player and added to inventory");
-                        this[gearSlot+1] = 0;
+                        this._inventory.Add(this[gearSlot + 1]);
+                        Console.WriteLine("\n" + Items[this._gear[gearSlot + 1]].Name + " was removed from player and added to inventory");
+                        this[gearSlot + 1] = 0;
                     }
                 }
 
@@ -676,8 +686,9 @@ namespace Assign1
              */
             public override String ToString()
             {
-                string message = "name: " + _name + "\nrace: " + _race + "\nlevel: " + _level;
-                return _guildID == 0 ? message + "\n" : message + "\nguild: " + Guilds[_guildID] + "\n";
+                string message = "Name: " + String.Format("{0,-12}", _name) + "\tRace: " + _race + "\tLevel: " + _level;
+                return _guildID == 0 ? message  : message + "\tGuild: " + Guilds[_guildID];
+                
             }
         }
 
@@ -797,11 +808,13 @@ namespace Assign1
                 get => flavor;
                 set => flavor = value;
             }
+		
             //the override for ToString that just prints out all of the item stats.
             public override String ToString()
             {
-                return "id: " + Id + "\nname: " + Name + "\ntype: " + Type + "\nilvl: " + Ilvl + "\nprimary: " + Primary + "\nstamina: " + Stamina + "\nrequirement: " + Requirement + "\nflavor text: " + Flavor + "\n";
+                return "(" + Type + ") " + Name + " |" + Ilvl + "| " + "--" + Requirement + "--" + "\n\t" + "\"" + Flavor + "\"";
             }
+		
             //The default constructor that just sets everything to 0 or null and adds one to Count
             //side note both of the constructors use the properties to access everything minus id
             public Item()
@@ -847,3 +860,5 @@ namespace Assign1
         }
     }
 }
+
+
