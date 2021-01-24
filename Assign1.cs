@@ -110,9 +110,10 @@ namespace Assign1
                         if (key4p == 2147483647)
                             break;
                         //if the player is found it prints all the gear that the player has equiped
-                        for (int i = 0; i < GEAR_SLOTS; i++)
+                        for (uint i = 0; i < GEAR_SLOTS; i++)
                             if (Players[key4p][i] != 0)
                                 Console.WriteLine(Items[(Players[key4p])[i]]);
+
                         break;
 
                     //makes sepcified player leave their guild
@@ -147,7 +148,7 @@ namespace Assign1
 
                     //Equips gear
                     case "7":
-                        
+
                         //finds the key of the player name entered 
                         uint key7p = FindPlayer(Players);
                         //if player name invalid, break
@@ -177,18 +178,18 @@ namespace Assign1
 
                         //check for invalid slot type
                         if (!Enum.IsDefined(typeof(ItemType), input))
-			{
+                        {
                             Console.WriteLine("\nInvalid item type.");
                             break;
-			}
+                        }
 
-                        int slot = (int) Enum.Parse(typeof(ItemType), input);
+                        uint slot = (uint)(ItemType)Enum.Parse(typeof(ItemType), input);
                         Players[key8p].UnequipGear(slot);
                         break;
 
                     //Award experience
                     case "9":
-                        
+
 
                     case "11":
                         break;
@@ -204,9 +205,9 @@ namespace Assign1
             } while (casekey != "10" && casekey != "q" && casekey != "Q" && casekey != "quit" && casekey != "Quit" && casekey != "exit" && casekey != "Exit");
         }
 
-	//finds the player specified by the user
-	public static uint FindPlayer(Dictionary<uint, Player> Players)
-	{
+        //finds the player specified by the user
+        public static uint FindPlayer(Dictionary<uint, Player> Players)
+        {
             //asks the user for the name of the player
             Console.WriteLine("\nPlease enter the name of the Player.");
             String playername = Console.ReadLine();
@@ -255,8 +256,8 @@ namespace Assign1
         //find the item specified by the user
         public static uint FindItem(Dictionary<uint, Item> Items)
         {
-            //asks the user for the guild name
-            Console.WriteLine("\nPlease enter the name of the Item you would like to equipt.");
+            //asks the user for the item name
+            Console.WriteLine("\nPlease enter the name of the Item you would like to equip.");
             String itemName = Console.ReadLine();
             uint key = 2147483647;
             //searches the guild list for a guild by name
@@ -279,7 +280,7 @@ namespace Assign1
          * Method to load data from input files
          */
         public static void LoadData()
-	{
+        {
             //Read in data from Guilds file
             var lines = File.ReadLines(guildsFile);
             foreach (var line in lines)
@@ -452,11 +453,11 @@ namespace Assign1
 
             /*
              * Method to equip gear to players 
-             */ 
+             */
             public void EquipGear(uint newGearID)
-			{                
-                //if item and player exist, equipt item id to corresponding slot in player gear array
-                int itype = (int)Items[newGearID].Type;
+            {
+                //if item and player exist, equip item id to corresponding slot in player gear array
+                uint itype = (uint)Items[newGearID].Type;
 
                 //make sure player meets required level for item
                 if (this.Level < Items[newGearID].Requirement)
@@ -468,81 +469,121 @@ namespace Assign1
 
                 //check if item is ring or trinket, if so then special case
                 if ((itype == 10) || (itype == 11))
-				{
+                {
                     switch (itype)
                     {
                         case 10:
-                            if (firstRingNext && this._gear[itype] == 0)
+                            if (firstRingNext || this._gear[itype] == 0)
                             {
+                                if (this._gear[itype] != 0)
+                                    this._inventory.Add(this._gear[itype]);
                                 this._gear[itype] = newGearID;
                                 firstRingNext = false;
+                                break;
                             }
                             else
                             {
+                                if (this._gear[itype + 1] != 0)
+                                    this._inventory.Add(this._gear[itype + 1]);
                                 this._gear[itype + 1] = newGearID;
                                 firstRingNext = true;
+                                break;
+
                             }
-                            break;
 
                         case 11:
-                            if (firstTrinkNext && this._gear[itype] == 0)
+                            if (firstTrinkNext || this._gear[itype + 1] == 0)
                             {
-                                this._gear[itype+1] = newGearID;
+                                if (this._gear[itype + 1] != 0)
+                                    this._inventory.Add(this._gear[itype + 1]);
+                                this._gear[itype + 1] = newGearID;
                                 firstTrinkNext = false;
+                                break;
                             }
                             else
                             {
+                                if (this._gear[itype + 2] != 0)
+                                    this._inventory.Add(this._gear[itype + 2]);
                                 this._gear[itype + 2] = newGearID;
                                 firstTrinkNext = true;
+                                break;
                             }
-                            break;
                     }
                 }
-
-                //equip to only slot otherwise
-                this._gear[itype] = newGearID;
+                //add to only slot if not special case
+                else
+                {
+                    if (this._gear[itype] != 0)
+                        this._inventory.Add(this._gear[itype]);
+                    this._gear[itype] = newGearID;
+                }
                 Console.WriteLine("\n" + this.Name + " is now equipped with " + Items[newGearID].Name);
             }
 
-            public void UnequipGear(int gearSlot)
-			{
-                //Special case
-                if (gearSlot == 10 || gearSlot == 11)
+            public void UnequipGear(uint gearSlot)
+            {
+                //Special case (ring)
+                if (gearSlot == 10)
                 {
-                    if (this[gearSlot] == 0 && this[gearSlot + 1] == 0)
-                        Console.WriteLine("\nThere was no item in that slot. Nothing changed.");
-                    else
+                    
+                    if (this[gearSlot] == 0)
                     {
-                        if (this[gearSlot] == 0)
+                        if (this[gearSlot + 1] == 0)
+                            Console.WriteLine("There was nothing in that slot. Nothing has changed.");
+                        else
                         {
+                            this._inventory.Add(this[gearSlot + 1]);
                             Console.WriteLine("\n" + Items[this._gear[gearSlot + 1]].Name + " was removed from player and added to inventory");
                             this[gearSlot + 1] = 0;
                         }
-
-                        else
-                        {
-                            Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
-                            this[gearSlot] = 0;
-                        }
                     }
-                }
-                //Non special case
-                else
-                {                    
-                    if (this[gearSlot] == 0)
-                        Console.WriteLine("\nThere was no item in that slot. Nothing changed.");
+
                     else
                     {
+                        this._inventory.Add(this[gearSlot]);
                         Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
                         this[gearSlot] = 0;
                     }
+                }
+
+                //Special case (trinket)
+                else if (gearSlot == 11)
+                {
+                    if (this[gearSlot+1] == 0)
+                    {
+                        if (this[gearSlot + 2] == 0)
+                            Console.WriteLine("There was nothing in that slot. Nothing has changed.");
+                        else
+                        {
+                            this._inventory.Add(this[gearSlot + 2]);
+                            Console.WriteLine("\n" + Items[this._gear[gearSlot + 2]].Name + " was removed from player and added to inventory");
+                            this[gearSlot + 2] = 0;
+                        }
+                    }
+
+                    else
+                    {
+                        this._inventory.Add(this[gearSlot+1]);
+                        Console.WriteLine("\n" + Items[this._gear[gearSlot+1]].Name + " was removed from player and added to inventory");
+                        this[gearSlot+1] = 0;
+                    }
+                }
+
+                //Non special case
+                else
+                {
+                    if (this[gearSlot] != 0)
+                        this._inventory.Add(this[gearSlot]);
+                    Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
+                    this[gearSlot] = 0;
+
                 }
             }
 
             /*
              * Indexer for the Players Gear array
              */
-            public uint this[int i]
+            public uint this[uint i]
             {
                 get { return _gear[i]; }
                 set { _gear[i] = value; }
@@ -740,3 +781,4 @@ namespace Assign1
         }
     }
 }
+
