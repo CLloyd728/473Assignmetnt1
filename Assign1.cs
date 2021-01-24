@@ -203,13 +203,13 @@ namespace Assign1
                         Console.WriteLine("\nEnter the amount of experience to award.");
                         String expAmt = Console.ReadLine();
                         for (int i = 0; i < expAmt.Length; i++)
-						{
+			{
                             if (!Char.IsDigit(expAmt[i]))
                             {
                                 isValidExp = false;
                                 break;
                             }
-						}
+			}
 
                         //If input bad, break
                         if (!isValidExp)
@@ -308,7 +308,7 @@ namespace Assign1
         }
 
         /*
-         * Method to load data from input files
+         * Method to read and load data from input files
          */
         public static void LoadData()
         {
