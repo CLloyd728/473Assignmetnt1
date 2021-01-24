@@ -65,7 +65,7 @@ namespace Assign1
             Console.WriteLine("Welcome to the World of ConflictCraft: Testing Environment!");
 
             //the case key or the variable that the user input that the switch will run on is stored.
-            String casekey = "0";
+            String casekey;
             do
             {
                 //prints the menu everytime the user does something in the menu.
