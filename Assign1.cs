@@ -123,11 +123,11 @@ namespace Assign1
                             break;
                         if (Players[key5p].GuildID == 0)
                         {
-                            Console.WriteLine(Players[key5p].Name + " is not in a guild and thus cannot leave one.");
+                            Console.WriteLine(Players[key5p].Name + "\n is not in a guild and thus cannot leave one.");
                             break;
                         }
                         Players[key5p].GuildID = 0;
-                        Console.WriteLine(Players[key5p].Name + " has left their guild.");
+                        Console.WriteLine("\n" + Players[key5p].Name + " has left their guild.");
                         break;
 
                     //makes specified player join specified guild.
@@ -143,7 +143,7 @@ namespace Assign1
                             break;
                         //otherwise it the player joins the guild and it prints a message letting you know that.
                         Players[key6p].GuildID = key6g;
-                        Console.WriteLine(Players[key6p].Name + "just joined the guild " + Guilds[key6g]);
+                        Console.WriteLine("\n" + Players[key6p].Name + " just joined the guild " + Guilds[key6g]);
                         break;
 
                     //Equips gear
@@ -189,6 +189,9 @@ namespace Assign1
 
                     //Award experience
                     case "9":
+                        //Flag to terminate program with bad input
+                        bool isValidExp = true;
+
                         //Find the key of player name entered
                         uint key9p = FindPlayer(Players);
 
@@ -202,9 +205,18 @@ namespace Assign1
                         for (int i = 0; i < expAmt.Length; i++)
 						{
                             if (!Char.IsDigit(expAmt[i]))
-                                Console.WriteLine("Invalid amount.");
-                            break;
+                            {
+                                isValidExp = false;
+                                break;
+                            }
 						}
+
+                        //If input bad, break
+                        if (!isValidExp)
+                        {
+                            Console.WriteLine("\nInvalid input.");
+                            break;
+                        }
 
                         //Award entered amount of experience
                         Players[key9p].LevelUp(UInt32.Parse(expAmt));
@@ -217,7 +229,7 @@ namespace Assign1
                         if (casekey == "10" || casekey == "q" || casekey == "Q" || casekey == "quit" || casekey == "Quit" || casekey == "exit" || casekey == "Exit")
                             break;
                         //else
-                        Console.WriteLine("You entered an invalid option please try again.");
+                        Console.WriteLine("\nYou entered an invalid option please try again.");
                         break;
                 }
 
@@ -242,7 +254,7 @@ namespace Assign1
             //having to relaunch.
             if (key == 2147483647)
             {
-                Console.WriteLine("Player under that name not found.");
+                Console.WriteLine("\nPlayer under that name not found.");
                 return key;
             }
             //returns the key of the related player if they exist.
@@ -265,7 +277,7 @@ namespace Assign1
             //returns and says that the guild couldn't be found.
             if (key == 2147483647)
             {
-                Console.WriteLine("Guild under that name not found.");
+                Console.WriteLine("\nGuild under that name not found.");
                 return key;
             }
             //returns the guild key
@@ -288,7 +300,7 @@ namespace Assign1
             //returns and says that the item couldn't be found.
             if (key == 2147483647)
             {
-                Console.WriteLine("Item under that name not found.");
+                Console.WriteLine("\nItem under that name not found.");
                 return key;
             }
             //returns the item key
