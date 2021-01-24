@@ -576,7 +576,6 @@ namespace Assign1
                         this._inventory.Add(this[gearSlot]);
                     Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
                     this[gearSlot] = 0;
-
                 }
             }
 
@@ -781,4 +780,3 @@ namespace Assign1
         }
     }
 }
-
