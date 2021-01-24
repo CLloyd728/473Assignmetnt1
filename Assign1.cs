@@ -174,22 +174,41 @@ namespace Assign1
                             break;
                         //get the slot type to unequip
                         Console.WriteLine("\nEnter what item slot you would like to remove.");
-                        String input = Console.ReadLine();
+                        String slotType = Console.ReadLine();
 
                         //check for invalid slot type
-                        if (!Enum.IsDefined(typeof(ItemType), input))
+                        if (!Enum.IsDefined(typeof(ItemType), slotType))
                         {
                             Console.WriteLine("\nInvalid item type.");
                             break;
                         }
 
-                        uint slot = (uint)(ItemType)Enum.Parse(typeof(ItemType), input);
+                        uint slot = (uint)(ItemType)Enum.Parse(typeof(ItemType), slotType);
                         Players[key8p].UnequipGear(slot);
                         break;
 
                     //Award experience
                     case "9":
+                        //Find the key of player name entered
+                        uint key9p = FindPlayer(Players);
 
+                        //If player name invalid, break
+                        if (key9p == 2147483647)
+                            break;
+
+                        //Get amount from user
+                        Console.WriteLine("\nEnter the amount of experience to award.");
+                        String expAmt = Console.ReadLine();
+                        for (int i = 0; i < expAmt.Length; i++)
+						{
+                            if (!Char.IsDigit(expAmt[i]))
+                                Console.WriteLine("Invalid amount.");
+                            break;
+						}
+
+                        //Award entered amount of experience
+                        Players[key9p].LevelUp(UInt32.Parse(expAmt));
+                        break;
 
                     case "11":
                         break;
@@ -446,13 +465,17 @@ namespace Assign1
                 while (exp >= expRequired && _level < MAX_LEVEL)
                 {
                     if (_level < MAX_LEVEL)
+                    {
                         _level++;
+                        Console.WriteLine("\n" + this.Name + " has reached level " + _level + "!");
+                    }
+
                     expRequired = _level * 1000;
                 }
             }
 
             /*
-             * Method to equip gear to players 
+             * Method to equip (add) gear to players 
              */
             public void EquipGear(uint newGearID)
             {
@@ -510,7 +533,7 @@ namespace Assign1
                             }
                     }
                 }
-                //add to only slot if not special case
+                //Add to only slot if not special case
                 else
                 {
                     if (this._gear[itype] != 0)
@@ -520,16 +543,22 @@ namespace Assign1
                 Console.WriteLine("\n" + this.Name + " is now equipped with " + Items[newGearID].Name);
             }
 
+            /*
+             * Method to unequip (remove) gear from players
+             */
             public void UnequipGear(uint gearSlot)
             {
                 //Special case (ring)
                 if (gearSlot == 10)
                 {
-                    
+                    //Check if ring 1 is empty
                     if (this[gearSlot] == 0)
                     {
+                        //Check if ring 2 is empty, if both empty do nothing
                         if (this[gearSlot + 1] == 0)
                             Console.WriteLine("There was nothing in that slot. Nothing has changed.");
+
+                        //If trinket 1 empty, unequip trinket 2
                         else
                         {
                             this._inventory.Add(this[gearSlot + 1]);
@@ -538,6 +567,7 @@ namespace Assign1
                         }
                     }
 
+                    //No special case
                     else
                     {
                         this._inventory.Add(this[gearSlot]);
@@ -549,10 +579,14 @@ namespace Assign1
                 //Special case (trinket)
                 else if (gearSlot == 11)
                 {
+                    //Check if trinket 1 is empty
                     if (this[gearSlot+1] == 0)
                     {
+                        //Check if trinket 2 is empty, if both empty do nothing
                         if (this[gearSlot + 2] == 0)
                             Console.WriteLine("There was nothing in that slot. Nothing has changed.");
+
+                        //If trinket 1 empty, uneqip trinket 2
                         else
                         {
                             this._inventory.Add(this[gearSlot + 2]);
@@ -561,6 +595,7 @@ namespace Assign1
                         }
                     }
 
+                    //If trinket 1 not empty, unequip trinket 1
                     else
                     {
                         this._inventory.Add(this[gearSlot+1]);
@@ -569,9 +604,10 @@ namespace Assign1
                     }
                 }
 
-                //Non special case
+                //No special case
                 else
                 {
+                    //Unequip item 
                     if (this[gearSlot] != 0)
                         this._inventory.Add(this[gearSlot]);
                     Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
