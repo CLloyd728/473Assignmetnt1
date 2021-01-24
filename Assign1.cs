@@ -118,14 +118,19 @@ namespace Assign1
 
                     //makes sepcified player leave their guild
                     case "5":
+                        //finds the player specified by the user
                         uint key5p = FindPlayer(Players);
+                        //if player not found it breaks out of the case.
                         if (key5p == 2147483647)
                             break;
+                        //looks for the guild specified by the user
                         if (Players[key5p].GuildID == 0)
                         {
+                            //if the player isn't in a guild it tells you that it can't leave a guild
                             Console.WriteLine(Players[key5p].Name + "\n is not in a guild and thus cannot leave one.");
                             break;
                         }
+                        //prints a message if leaving the guild was successfull
                         Players[key5p].GuildID = 0;
                         Console.WriteLine("\n" + Players[key5p].Name + " has left their guild.");
                         break;
@@ -222,7 +227,21 @@ namespace Assign1
                         Players[key9p].LevelUp(UInt32.Parse(expAmt));
                         break;
 
-                    case "11":
+                    case "T":
+                        //creates a new sortedset and then adds all the items to it
+                        SortedSet<Item> sortedItems = new SortedSet<Item>();
+                        foreach (KeyValuePair<uint, Item> pair in Items)
+                            sortedItems.Add(pair.Value);
+                        //prints out all the items in the sorted set
+                        foreach (Item value in sortedItems)
+                            Console.WriteLine(value);
+                        //creates a new sortedset and then adds all the players to it
+                        SortedSet<Player> sortedPlayers = new SortedSet<Player>();
+                        foreach (KeyValuePair<uint, Player> pair in Players)
+                            sortedPlayers.Add(pair.Value);
+                        //prints all the players
+                        foreach (Player value in sortedPlayers)
+                            Console.WriteLine(value);
                         break;
 
                     default:
