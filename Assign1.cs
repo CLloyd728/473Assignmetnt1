@@ -650,9 +650,15 @@ namespace Assign1
                 {
                     //Unequip item 
                     if (this[gearSlot] != 0)
+                    {
                         this._inventory.Add(this[gearSlot]);
-                    Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
-                    this[gearSlot] = 0;
+                        Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
+                        this[gearSlot] = 0;
+                    }
+                    else
+                    {
+                        Console.WriteLine("There was nothing in that slot. Nothing has changed.");
+                    }
                 }
             }
 
