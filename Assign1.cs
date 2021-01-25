@@ -26,7 +26,7 @@ namespace Assign1
         public enum Race { Orc, Troll, Tauren, Forsaken };
 
         /*
-         * Global variables
+         * Global variable definitions
          */
         private static uint MAX_ILVL = 360;
         private static uint MAX_PRIMARY = 200;
@@ -69,17 +69,9 @@ namespace Assign1
             do
             {
                 //prints the menu everytime the user does something in the menu.
-                Console.WriteLine("\nWelcome to the World of ConflictCraft: Testing Environment. Please select an option from the list below:");
-                Console.WriteLine("\t1.) Print all players");
-                Console.WriteLine("\t2.) Print all guilds");
-                Console.WriteLine("\t3.) Print all gear");
-                Console.WriteLine("\t4.) Print gear list for player");
-                Console.WriteLine("\t5.) Leave guild");
-                Console.WriteLine("\t6.) Join guild");
-                Console.WriteLine("\t7.) Equip gear");
-                Console.WriteLine("\t8.) Unequip gear");
-                Console.WriteLine("\t9.) Award experience");
-                Console.WriteLine("\t10.) Quit");
+                Console.WriteLine("\nWelcome to the World of ConflictCraft: Testing Environment. Please select an option from the list below:\n\t1.) Print all players" +
+                                    "\n\t2.) Print all guilds\n\t3.) Print all gear\n\t4.) Print gear list for player\n\t5.) Leave guild\n\t6.) Join guild " + 
+                                    "\n\t7.) Equip gear\n\t8.) Unequip gear\n\t9.) Award experience\n\t10.) Quit");
                 casekey = Console.ReadLine();
                 //the switch for all the menu options will be.
                 switch (casekey)
@@ -106,24 +98,27 @@ namespace Assign1
                     case "4":
                         //finds the key of the player whose name the user will provide
                         uint key4p = FindPlayer(Players);
+
                         //if player is not found it exits this run of the loop
                         if (key4p == 2147483647)
                             break;
+
                         //if the player is found it prints all the gear that the player has equiped
                         Console.WriteLine(Players[key4p]);
                         for (uint i = 0; i < GEAR_SLOTS; i++)
                             if (Players[key4p][i] != 0)
                                 Console.WriteLine(Items[(Players[key4p])[i]]);
-
                         break;
 
                     //makes sepcified player leave their guild
                     case "5":
                         //finds the player specified by the user
                         uint key5p = FindPlayer(Players);
+
                         //if player not found it breaks out of the case.
                         if (key5p == 2147483647)
                             break;
+
                         //looks for the guild specified by the user
                         if (Players[key5p].GuildID == 0)
                         {
@@ -131,6 +126,7 @@ namespace Assign1
                             Console.WriteLine(Players[key5p].Name + " is not in a guild and thus cannot leave one.");
                             break;
                         }
+
                         //prints a message if leaving the guild was successfull
                         Players[key5p].GuildID = 0;
                         Console.WriteLine(Players[key5p].Name + " has left their guild.");
@@ -140,13 +136,16 @@ namespace Assign1
                     case "6":
                         //finds the key of the player in the player list
                         uint key6p = FindPlayer(Players);
+
                         //if the player is not found it exits
                         if (key6p == 2147483647)
                             break;
+
                         //if the guild you want to join doesn't exist it exits
                         uint key6g = FindGuild(Guilds);
                         if (key6g == 2147483647)
                             break;
+
                         //otherwise it the player joins the guild and it prints a message letting you know that.
                         Players[key6p].GuildID = key6g;
                         Console.WriteLine("\n" + Players[key6p].Name + " just joined " + Guilds[key6g] + "!");
@@ -157,12 +156,14 @@ namespace Assign1
 
                         //finds the key of the player name entered 
                         uint key7p = FindPlayer(Players);
+
                         //if player name invalid, break
                         if (key7p == 2147483647)
                             break;
 
                         //finds the key of the item name entered
                         uint key7i = FindItem(Items);
+
                         //if item name invalid, break
                         if (key7i == 2147483647)
                             break;
@@ -173,25 +174,46 @@ namespace Assign1
 
                     //Unequip gear
                     case "8":
+                        bool isValidSlot = true;
                         //finds the key of the player name entered 
                         uint key8p = FindPlayer(Players);
+
                         //if player name invalid, break
                         if (key8p == 2147483647)
                             break;
-                        //get the slot type to unequip
-                        Console.WriteLine("Enter what item slot you would like to remove:\n\tHelmet\n\tNeck\n\tShoulders\n\tBack\n\tChest" +
-                                            "\n\tWrist\n\tGloves\n\tBelt\n\tPants\n\tBoots\n\tRing\n\tTrinket");
-                        String slotType = Console.ReadLine();
 
-                        //check for invalid slot type
-                        if (!Enum.IsDefined(typeof(ItemType), slotType))
+                        //get the slot type to unequip
+                        Console.WriteLine("Enter what item slot you would like to remove:\n\t1.) Helmet\n\t2.) Neck\n\t3.) Shoulders\n\t4.) Back\n\t5.) Chest" +
+                                            "\n\t6.) Wrist\n\t7.) Gloves\n\t8.) Belt\n\t9.) Pants\n\t10.) Boots\n\t11.) Ring\n\t12.) Trinket");
+                        String inputSlot = Console.ReadLine();
+
+                        //Validate input
+                        for (int i = 0; i < inputSlot.Length; i++)
                         {
-                            Console.WriteLine("\nInvalid item type.");
+                            if (!Char.IsDigit(inputSlot[i]))
+                            {
+                                isValidSlot = false;
+                                break;
+                            }
+                        }
+
+                        //Terminate if bad input
+                        if (!isValidSlot)
+                        {
+                            Console.WriteLine("\nInvalid input.");
                             break;
                         }
 
-                        uint slot = (uint)(ItemType)Enum.Parse(typeof(ItemType), slotType);
-                        Players[key8p].UnequipGear(slot);
+                        //Terminate if invalid selection
+                        uint slotType = Convert.ToUInt32(inputSlot);
+                        if (slotType < 1 || slotType > 12)
+                        {
+                            Console.WriteLine("\nInvalid input.");
+                            break;
+                        }     
+
+                        //Unequip 
+                        Players[key8p].UnequipGear(slotType-1);
                         break;
 
                     //Award experience
@@ -239,13 +261,16 @@ namespace Assign1
                         SortedSet<Item> sortedItems = new SortedSet<Item>();
                         foreach (KeyValuePair<uint, Item> pair in Items)
                             sortedItems.Add(pair.Value);
+
                         //prints out all the items in the sorted set
                         foreach (Item value in sortedItems)
                             Console.WriteLine(value);
+
                         //creates a new sortedset and then adds all the players to it
                         SortedSet<Player> sortedPlayers = new SortedSet<Player>();
                         foreach (KeyValuePair<uint, Player> pair in Players)
                             sortedPlayers.Add(pair.Value);
+
                         //prints all the players
                         foreach (Player value in sortedPlayers)
                             Console.WriteLine(value);
@@ -270,12 +295,14 @@ namespace Assign1
             String playername = Console.ReadLine();
             Console.WriteLine();
             uint key = 2147483647;
+         
             //checks through the player list for someone by that name
             foreach (KeyValuePair<uint, Player> pair in Players)
             {
                 if ((pair.Value).Name == playername)
                     key = pair.Key;
             }
+         
             //if it doesn't exist it returns the error code I decided on because it's the max 32 bit int
             //I also don't throw exceptions here just so you can keep trying/using the menu rather than 
             //having to relaunch.
@@ -284,6 +311,7 @@ namespace Assign1
                 Console.WriteLine("\nPlayer under that name not found.");
                 return key;
             }
+         
             //returns the key of the related player if they exist.
             return key;
         }
@@ -295,18 +323,21 @@ namespace Assign1
             Console.Write("Please enter the name of the Guild you would like to join/leave: ");
             String guildname = Console.ReadLine();
             uint key = 2147483647;
+         
             //searches the guild list for a guild by name
             foreach (KeyValuePair<uint, String> pair in Guilds)
             {
                 if (pair.Value == guildname)
                     key = pair.Key;
             }
+         
             //returns and says that the guild couldn't be found.
             if (key == 2147483647)
             {
                 Console.WriteLine("\nGuild under that name not found.");
                 return key;
             }
+         
             //returns the guild key
             return key;
         }
@@ -318,18 +349,21 @@ namespace Assign1
             Console.WriteLine("\nPlease enter the name of the Item you would like to equip.");
             String itemName = Console.ReadLine();
             uint key = 2147483647;
+         
             //searches the guild list for a guild by name
             foreach (KeyValuePair<uint, Item> pair in Items)
             {
                 if (pair.Value.Name == itemName)
                     key = pair.Key;
             }
+         
             //returns and says that the item couldn't be found.
             if (key == 2147483647)
             {
                 Console.WriteLine("\nItem under that name not found.");
                 return key;
             }
+         
             //returns the item key
             return key;
         }
@@ -354,8 +388,8 @@ namespace Assign1
             {
                 //Seperate on tabs and add to dict of Items
                 string[] s = line.Split('\t');
-                Item item = new Item(Convert.ToUInt32(s[0]), s[1], (ItemType)Convert.ToUInt32(s[2]), Convert.ToUInt32(s[3]), Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]),
-                    Convert.ToUInt32(s[6]), s[7]);
+                Item item = new Item(Convert.ToUInt32(s[0]), s[1], (ItemType)Convert.ToUInt32(s[2]), Convert.ToUInt32(s[3]), 
+                    Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]), Convert.ToUInt32(s[6]), s[7]);
                 Items.Add(item.Id, item);
             }
 
@@ -655,9 +689,9 @@ namespace Assign1
                         Console.WriteLine("\n" + Items[this._gear[gearSlot]].Name + " was removed from player and added to inventory");
                         this[gearSlot] = 0;
                     }
-                    else
-                    {
-                        Console.WriteLine("There was nothing in that slot. Nothing has changed.");
+					else
+					{
+                        Console.WriteLine("\nThere was nothing in that slot. Nothing has changed.");
                     }
                 }
             }
