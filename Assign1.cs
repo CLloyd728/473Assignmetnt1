@@ -295,12 +295,14 @@ namespace Assign1
             String playername = Console.ReadLine();
             Console.WriteLine();
             uint key = 2147483647;
+
             //checks through the player list for someone by that name
             foreach (KeyValuePair<uint, Player> pair in Players)
             {
                 if ((pair.Value).Name == playername)
                     key = pair.Key;
             }
+
             //if it doesn't exist it returns the error code I decided on because it's the max 32 bit int
             //I also don't throw exceptions here just so you can keep trying/using the menu rather than 
             //having to relaunch.
@@ -309,6 +311,7 @@ namespace Assign1
                 Console.WriteLine("\nPlayer under that name not found.");
                 return key;
             }
+
             //returns the key of the related player if they exist.
             return key;
         }
@@ -320,18 +323,21 @@ namespace Assign1
             Console.Write("Please enter the name of the Guild you would like to join/leave: ");
             String guildname = Console.ReadLine();
             uint key = 2147483647;
+
             //searches the guild list for a guild by name
             foreach (KeyValuePair<uint, String> pair in Guilds)
             {
                 if (pair.Value == guildname)
                     key = pair.Key;
             }
+
             //returns and says that the guild couldn't be found.
             if (key == 2147483647)
             {
                 Console.WriteLine("\nGuild under that name not found.");
                 return key;
             }
+
             //returns the guild key
             return key;
         }
@@ -343,18 +349,21 @@ namespace Assign1
             Console.WriteLine("\nPlease enter the name of the Item you would like to equip.");
             String itemName = Console.ReadLine();
             uint key = 2147483647;
+
             //searches the guild list for a guild by name
             foreach (KeyValuePair<uint, Item> pair in Items)
             {
                 if (pair.Value.Name == itemName)
                     key = pair.Key;
             }
+
             //returns and says that the item couldn't be found.
             if (key == 2147483647)
             {
                 Console.WriteLine("\nItem under that name not found.");
                 return key;
             }
+
             //returns the item key
             return key;
         }
@@ -380,7 +389,7 @@ namespace Assign1
                 //Seperate on tabs and add to dict of Items
                 string[] s = line.Split('\t');
                 Item item = new Item(Convert.ToUInt32(s[0]), s[1], (ItemType)Convert.ToUInt32(s[2]), Convert.ToUInt32(s[3]), 
-                    Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]), Convert.ToUInt32(s[6]), s[7]);
+                    		     Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]), Convert.ToUInt32(s[6]), s[7]);
                 Items.Add(item.Id, item);
             }
 
@@ -398,7 +407,7 @@ namespace Assign1
                     ar[i] = Convert.ToUInt32(s[x]);
                 }
                 Player player = new Player(Convert.ToUInt32(s[0]), s[1], (Race)Convert.ToUInt32(s[2]), Convert.ToUInt32(s[3]),
-                        Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]), ar);
+                        		   Convert.ToUInt32(s[4]), Convert.ToUInt32(s[5]), ar);
                 Players.Add(player.Id, player);
             }
         }
