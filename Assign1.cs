@@ -7,6 +7,9 @@ using System.IO;
  Assignment 1
  CSCI 473
  This is a program to a test functionality for Players and Items in the gane 'World of ConflictCraft'
+ It includes definitions for the item and player classes as well as some static functions used for
+ finding and verifying that items,players, or guilds exist.
+ Then finally a menu interface for using and interacting with all of these functions.
  */
 
 namespace Assign1
